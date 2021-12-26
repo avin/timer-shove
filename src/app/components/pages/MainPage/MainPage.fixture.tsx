@@ -1,10 +1,10 @@
 import React from 'react';
-import About from './About';
+import MainPage from './MainPage';
 
 export default (): JSX.Element => {
   return (
     <div className="content">
-      <About/>
+      <MainPage/>
     </div>
   );
 };
