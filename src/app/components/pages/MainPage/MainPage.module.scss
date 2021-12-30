@@ -1,2 +1,105 @@
 @import '~@/styles/variables';
 @import '~@/styles/mixins';
+
+.container {
+  height: 100%;
+  background-color: $light-gray3;
+  position: relative;
+}
+
+$filler-size: 12px;
+
+.filler {
+  position: absolute;
+  z-index: 1;
+  background-color: $blue3;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  &.isTimeOver {
+    animation: timer-over-filler-animation 0.12s infinite alternate;
+  }
+
+  &.isChilling {
+    background-color: $gold3;
+    animation: chilling-filler-animation 0.5s infinite alternate;
+  }
+}
+
+@keyframes timer-over-filler-animation {
+  from {
+    background-color: $blue3;
+  }
+  to {
+    background-color: $white;
+  }
+}
+
+@keyframes chilling-filler-animation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.inner {
+  padding: 8px;
+  position: absolute;
+  z-index: 2;
+  background-color: white;
+  top: $filler-size;
+  left: $filler-size;
+  width: calc(100% - #{$filler-size * 2});
+  height: calc(100% - #{$filler-size * 2});
+}
+
+.form {
+  & > * + * {
+    margin-top: 12px;
+  }
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  & > * + * {
+    margin-left: 8px;
+  }
+}
+
+.startButton {
+  width: 200px;
+}
+
+.timeInput {
+  input {
+    text-align: center;
+  }
+}
+
+.timeString {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+}
+
+.chillButton {
+  flex: 1;
+}
+
+.resumeButton {
+  flex: 1;
+}
+
+.stopOnChillButton {
+  width: 80px;
+}
+
+.addTimeButton {
+  width: 80px;
+}

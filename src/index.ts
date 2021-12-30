@@ -81,8 +81,8 @@ const getWindowPosition = () => {
 
 const createWindow = (): void => {
   win = new BrowserWindow({
-    width: 700,
-    height: 602,
+    width: 400,
+    height: 120,
     show: false,
     frame: false,
     fullscreenable: false,
@@ -104,11 +104,13 @@ const createWindow = (): void => {
   win.setMenuBarVisibility(false);
 
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-  win.webContents.openDevTools();
-
-  win.on('blur', () => {
-    // win.hide();
+  win.webContents.openDevTools({
+    mode: "detach"
   });
+
+  // win.on('blur', () => {
+  //   win.hide();
+  // });
 
   win.on('hide', () => {
     closeTime = +new Date();

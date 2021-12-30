@@ -11,12 +11,9 @@ export interface AppProps {
 const App = ({ store }: AppProps): JSX.Element => (
   <Provider store={store}>
     <MemoryRouter>
-      <div className="App">
-        <h1>Welcome to React Router!</h1>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+      </Routes>
     </MemoryRouter>
   </Provider>
 );
