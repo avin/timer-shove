@@ -1,23 +1,35 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AppThunkAction } from '../configureStore';
 
 type DataState = {
-  language: string;
+  timerSetupString: string;
 };
 
 const initialState: DataState = {
-  language: 'ru',
+  timerSetupString: '40 minutes',
 };
 
 const slice = createSlice({
   name: 'uiSettings',
   initialState,
   reducers: {
-    changeLanguage: (state, action: PayloadAction<string>) => {
-      state.language = action.payload;
+    setUiSettingsValues: (state, action: PayloadAction<Partial<DataState>>) => {
+      return {
+        ...state,
+        ...action.payload,
+      };
     },
   },
 });
 
-export const { changeLanguage } = slice.actions;
+export const { setUiSettingsValues } = slice.actions;
 
 export default slice.reducer;
+
+export const setTimerSetupString =
+  (value: string): AppThunkAction<Promise<void>> =>
+  async (dispatch) => {
+    dispatch(setUiSettingsValues({ timerSetupString: value }));
+
+    void window.ipcRenderer.invoke('setStoreValue', { key: 'timerSetupString', value });
+  };

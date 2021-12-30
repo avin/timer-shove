@@ -5,6 +5,11 @@
   height: 100%;
   background-color: $light-gray3;
   position: relative;
+  overflow: hidden;
+
+  * {
+    border-radius: 0 !important;
+  }
 }
 
 $filler-size: 12px;
@@ -86,6 +91,7 @@ $filler-size: 12px;
   justify-content: center;
   align-items: center;
   height: 30px;
+  font-size: 18px;
 }
 
 .chillButton {

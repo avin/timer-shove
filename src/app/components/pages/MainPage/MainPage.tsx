@@ -5,20 +5,49 @@ import { Button, InputGroup, Intent } from '@blueprintjs/core';
 import { secondsToString, stringToSeconds } from 'timer-string';
 import { playSound } from '../../../utils/sound';
 import cn from 'clsx';
+import { useDispatch, useSelector } from 'react-redux';
+import { timerSetupStringSelector } from '../../../store/selectors';
+import { setTimerSetupString as setTimerSetupStringInStore } from '../../../store/reducers/uiSettings';
+import { AppThunkDispatch } from '../../../store/configureStore';
 
 let timerId: ReturnType<typeof setTimeout>;
+let updateWindowStateTimerId: ReturnType<typeof setTimeout>;
 let soundTimerId: ReturnType<typeof setTimeout>;
 
 const MainPage = (): JSX.Element => {
   const [isActiveTimer, setIsActiveTimer] = useState(false);
   const [isChilling, setIsChilling] = useState(false);
   const [isWrongTimerSetupString, setIsWrongTimerSetupString] = useState(false);
-  const [timerSetupString, setTimerSetupString] = useState('3 sec');
   const [timerString, setTimerString] = useState('');
   const [timerValue, setTimerValue] = useState(0);
   const [initialTimerValue, setInitialTimerValue] = useState(0);
 
+  const dispatch: AppThunkDispatch = useDispatch();
+  const timerSetupString = useSelector(timerSetupStringSelector);
+
   const isTimeOver = timerValue === 0;
+
+  const setTimerSetupString = useCallback(
+    (val) => {
+      dispatch(setTimerSetupStringInStore(val));
+    },
+    [dispatch],
+  );
+
+  useEffect(() => {
+    const handleBlur = () => {
+      if ((isActiveTimer && isTimeOver) || isChilling) {
+        return false;
+      }
+      window.ipcRenderer.send('hideWindow');
+    };
+
+    window.ipcRenderer.on('blur', handleBlur);
+
+    return () => {
+      window.ipcRenderer.off('blur', handleBlur);
+    };
+  }, [isActiveTimer, isTimeOver, isChilling]);
 
   useEffect(() => {
     let volume = -0.5;
@@ -45,9 +74,24 @@ const MainPage = (): JSX.Element => {
         setTimerValue(timerValue - 1);
       }, 1000);
     } else {
-      window.ipcRenderer.send('timeOver', '11');
+      window.ipcRenderer.send('showWindow');
     }
   }, [timerValue, isActiveTimer]);
+
+  useEffect(() => {
+    const updateWindowState = () => {
+      window.ipcRenderer.send('showWindow');
+      updateWindowStateTimerId = setTimeout(updateWindowState, 250);
+    };
+
+    if ((isActiveTimer && isTimeOver) || isChilling) {
+      updateWindowState();
+    }
+
+    return () => {
+      clearTimeout(updateWindowStateTimerId);
+    };
+  }, [isActiveTimer, isTimeOver, isChilling]);
 
   const handleClickStart = useCallback(() => {
     const seconds = stringToSeconds(timerSetupString);
@@ -58,6 +102,9 @@ const MainPage = (): JSX.Element => {
       setInitialTimerValue(seconds);
       setTimerValue(seconds);
       setIsActiveTimer(true);
+
+      window.ipcRenderer.send('hideWindow');
+      window.ipcRenderer.send('startTimer');
     }
   }, [timerSetupString]);
 
@@ -65,6 +112,8 @@ const MainPage = (): JSX.Element => {
     clearTimeout(timerId);
     setIsChilling(false);
     setIsActiveTimer(false);
+
+    window.ipcRenderer.send('stopTimer');
   }, []);
 
   const handleSubmit = useCallback((e) => {
@@ -72,33 +121,38 @@ const MainPage = (): JSX.Element => {
   }, []);
 
   const handleClickStartChill = useCallback(() => {
-    console.log('chill');
     setIsChilling(true);
     setIsActiveTimer(false);
+
+    window.ipcRenderer.send('startChill');
   }, []);
 
   const handleClickResume = useCallback(() => {
     handleClickStart();
     setIsChilling(false);
-  }, []);
+  }, [handleClickStart]);
 
   const handleClickAddTime = useCallback(() => {
     setInitialTimerValue(5 * 60);
     setTimerValue(5 * 60);
     setIsActiveTimer(true);
+
+    window.ipcRenderer.send('hideWindow');
   }, []);
 
-  const handleChangeTimerSetupString = useCallback((e) => {
-    setTimerSetupString(e.target.value);
-  }, []);
+  const handleChangeTimerSetupString = useCallback(
+    (e) => {
+      setTimerSetupString(e.target.value);
+    },
+    [setTimerSetupString],
+  );
 
   const fillerWidth = useMemo(() => {
-    console.log(timerValue, initialTimerValue);
     if (!isActiveTimer) {
       return '0';
     }
     return `${100 - Number(((timerValue / initialTimerValue) * 100).toFixed(0))}%`;
-  }, [timerSetupString, timerValue, isActiveTimer, initialTimerValue]);
+  }, [timerValue, isActiveTimer, initialTimerValue]);
 
   const handleFocusInput = useCallback((e) => {
     e.currentTarget.select();
@@ -110,7 +164,7 @@ const MainPage = (): JSX.Element => {
         <div className={cn(styles.filler, styles.isChilling)} />
         <div className={styles.inner}>
           <div className={styles.form}>
-            <div className={styles.timeString}>Chill time</div>
+            <div className={styles.timeString}>Chill out time</div>
             <div className={styles.buttons}>
               <Button onClick={handleClickResume} intent={Intent.SUCCESS} className={styles.resumeButton}>
                 Resume
@@ -139,7 +193,7 @@ const MainPage = (): JSX.Element => {
 
                   <div className={styles.buttons}>
                     <Button onClick={handleClickStartChill} intent={Intent.PRIMARY} className={styles.chillButton}>
-                      Chill
+                      Chill out
                     </Button>
                     <Button onClick={handleClickAddTime} intent={Intent.WARNING} className={styles.addTimeButton}>
                       +5 min
