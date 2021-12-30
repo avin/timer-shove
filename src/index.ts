@@ -74,9 +74,12 @@ const createWindow = (): void => {
   win.setMenuBarVisibility(false);
 
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-  win.webContents.openDevTools({
-    mode: 'detach',
-  });
+
+  if (isDev) {
+    win.webContents.openDevTools({
+      mode: 'detach',
+    });
+  }
 
   win.on('blur', () => {
     win.webContents.send('blur');

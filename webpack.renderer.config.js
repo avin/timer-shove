@@ -1,6 +1,7 @@
 const rules = require('./webpack.rules');
 const plugins = require('./webpack.plugins');
-const path = require('path')
+const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const { NODE_ENV } = process.env;
 const inDevelopment = NODE_ENV === 'development';
@@ -37,11 +38,21 @@ module.exports = {
   module: {
     rules,
   },
-  plugins: plugins,
+  plugins: [
+    ...plugins,
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'src', 'icons'),
+          to: path.resolve(__dirname, '.webpack/main', 'icons'),
+        },
+      ],
+    }),
+  ],
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
     alias: {
-      '@': path.resolve(__dirname, 'src', 'app')
-    }
+      '@': path.resolve(__dirname, 'src', 'app'),
+    },
   },
 };
