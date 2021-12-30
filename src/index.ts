@@ -58,13 +58,12 @@ const createWindow = (): void => {
     fullscreenable: false,
     resizable: false,
     transparent: true,
+    skipTaskbar: true,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-      // preload: path.join(__dirname, 'renderer.js'),
-      // nodeIntegrationInSubFrames: true,
-      webviewTag: true,
       nodeIntegration: true,
       contextIsolation: false,
+      backgroundThrottling: false
     },
     icon: getIcon('time-on.png'),
   });
