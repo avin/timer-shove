@@ -94,7 +94,7 @@ const MainPage = (): JSX.Element => {
   }, [isActiveTimer, isTimeOver, isChilling]);
 
   const handleClickStart = useCallback(() => {
-    const seconds = stringToSeconds(timerSetupString);
+    const seconds = Math.max(stringToSeconds(timerSetupString), 1);
     if (seconds === null) {
       setIsWrongTimerSetupString(true);
     } else {

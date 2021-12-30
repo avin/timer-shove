@@ -36,9 +36,9 @@ const getWindowPosition = () => {
   let y;
 
   if (trayBounds.y > screenHeight / 2) {
-    y = Math.round(trayBounds.y - windowBounds.height - 3);
+    y = Math.round(trayBounds.y - windowBounds.height);
   } else {
-    y = Math.round(trayBounds.y + trayBounds.height + 3);
+    y = Math.round(trayBounds.y + trayBounds.height);
   }
 
   return { x: x, y: y };
@@ -51,8 +51,8 @@ const getIcon = (iconFileName: string): string => {
 
 const createWindow = (): void => {
   win = new BrowserWindow({
-    width: 360,
-    height: 112,
+    width: 370,
+    height: 122,
     show: false,
     frame: false,
     fullscreenable: false,
@@ -138,6 +138,7 @@ ipcMain.on('showWindow', () => {
 ipcMain.handle('getStoreValue', (event, key) => {
   return store.get(key);
 });
+
 ipcMain.handle('setStoreValue', (event, { key, value }) => {
   return store.set(key, value);
 });
