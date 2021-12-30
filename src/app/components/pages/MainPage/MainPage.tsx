@@ -21,9 +21,11 @@ const MainPage = (): JSX.Element => {
   const isTimeOver = timerValue === 0;
 
   useEffect(() => {
+    let volume = -0.5;
     const repeatPlaySound = () => {
-      playSound(349.2 + 100, 'sine', 0.2, 0.5);
-      soundTimerId = setTimeout(repeatPlaySound, 500);
+      volume = volume + 0.0125;
+      playSound(349.2 + Math.min(1000 * volume, 1600), 'sine', 0.2, Math.min(Math.max(volume, 0), 0.5));
+      soundTimerId = setTimeout(repeatPlaySound, 240);
     };
 
     clearTimeout(soundTimerId);
@@ -91,12 +93,16 @@ const MainPage = (): JSX.Element => {
   }, []);
 
   const fillerWidth = useMemo(() => {
-    console.log(timerValue, initialTimerValue)
+    console.log(timerValue, initialTimerValue);
     if (!isActiveTimer) {
       return '0';
     }
     return `${100 - Number(((timerValue / initialTimerValue) * 100).toFixed(0))}%`;
   }, [timerSetupString, timerValue, isActiveTimer, initialTimerValue]);
+
+  const handleFocusInput = useCallback((e) => {
+    e.currentTarget.select();
+  }, []);
 
   if (isChilling) {
     return (
@@ -163,6 +169,7 @@ const MainPage = (): JSX.Element => {
                 className={styles.timeInput}
                 onChange={handleChangeTimerSetupString}
                 value={timerSetupString}
+                onFocus={handleFocusInput}
               />
 
               <div className={styles.buttons}>

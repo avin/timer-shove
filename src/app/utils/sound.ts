@@ -9,10 +9,10 @@ export const playSound = (frequency: number, type: OscillatorType, x: number, vo
   o.frequency.value = frequency;
   o.start();
   g.gain.value = volume;
-  g.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + x);
+  g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + x);
 
   setTimeout(() => {
     o.stop();
     o.disconnect();
   }, (x + 0.5) * 1000);
-};
+}
