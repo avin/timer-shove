@@ -16,6 +16,7 @@ let soundTimerId: ReturnType<typeof setTimeout>;
 
 const MainPage = (): JSX.Element => {
   const [isActiveTimer, setIsActiveTimer] = useState(false);
+  const [isIdleChilling, setIsIdleChilling] = useState(false);
   const [isChilling, setIsChilling] = useState(false);
   const [isWrongTimerSetupString, setIsWrongTimerSetupString] = useState(false);
   const [timerString, setTimerString] = useState('');
@@ -48,6 +49,15 @@ const MainPage = (): JSX.Element => {
       window.ipcRenderer.off('blur', handleBlur);
     };
   }, [isActiveTimer, isTimeOver, isChilling]);
+
+  useEffect(() => {
+    if (isChilling) {
+      setIsIdleChilling(true);
+      setTimeout(() => {
+        setIsIdleChilling(false);
+      }, 3000);
+    }
+  }, [isChilling]);
 
   useEffect(() => {
     let volume = -0.5;
@@ -166,7 +176,12 @@ const MainPage = (): JSX.Element => {
           <div className={styles.form}>
             <div className={styles.timeString}>Chill out time</div>
             <div className={styles.buttons}>
-              <Button onClick={handleClickResume} intent={Intent.SUCCESS} className={styles.resumeButton}>
+              <Button
+                onClick={handleClickResume}
+                intent={Intent.SUCCESS}
+                className={styles.resumeButton}
+                disabled={isIdleChilling}
+              >
                 Resume
               </Button>
               <Button onClick={handleClickStop} intent={Intent.DANGER} className={styles.stopOnChillButton}>
