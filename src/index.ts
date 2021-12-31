@@ -86,7 +86,7 @@ const createWindow = (): void => {
 const showWindow = ({ withFocus = true }: { withFocus?: boolean } = {}) => {
   const position = getWindowPosition();
   win.setPosition(position.x, position.y, false);
-  win.show();
+  win.showInactive();
   if (withFocus) {
     win.focus();
   }
