@@ -30,7 +30,7 @@ const MainPage = (): JSX.Element => {
 
   const setTimerSetupString = useCallback(
     (val) => {
-      dispatch(setTimerSetupStringInStore(val));
+      void dispatch(setTimerSetupStringInStore(val));
     },
     [dispatch],
   );
