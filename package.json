@@ -13,18 +13,22 @@
   },
   "keywords": [],
   "author": {
-    "name": "Avin Lambrero",
+    "name": "Avinlab",
     "email": "avin.github@gmail.com"
   },
   "license": "MIT",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "name": "timer-shove",
+        "executableName": "timer-shove",
+        "icon": "additional/icons/main"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "timer_shove"
+            "name": "timer-shove"
           }
         },
         {
