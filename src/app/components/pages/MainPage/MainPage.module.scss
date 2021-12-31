@@ -73,6 +73,7 @@ $filler-size: 12px;
 }
 
 .buttons {
+  user-select: none;
   display: flex;
   justify-content: center;
   & > * + * {
@@ -96,6 +97,7 @@ $filler-size: 12px;
   align-items: center;
   height: 30px;
   font-size: 18px;
+  user-select: none;
 }
 
 .chillButton {
