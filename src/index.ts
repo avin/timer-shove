@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Menu, screen, Tray } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, screen, Tray, nativeImage } from 'electron';
 import isDev from 'electron-is-dev';
 import Store from 'electron-store';
 import path from 'path';
@@ -36,9 +36,11 @@ const getWindowPosition = () => {
   return { x: x, y: y };
 };
 
-const getIcon = (iconFileName: string): string => {
-  const imgPath = `icons/${iconFileName}`;
-  return isDev ? path.join(__dirname, `../../src/${imgPath}`) : path.join(__dirname, `./${imgPath}`);
+const getIcon = (iconFileName: string): Electron.NativeImage => {
+  const img = `icons/${iconFileName}`;
+  const imgPath = isDev ? path.join(__dirname, `../../src/${img}`) : path.join(__dirname, `./${img}`);
+  const image = nativeImage.createFromPath(imgPath);
+  return image.resize({ width: 16, height: 16 });
 };
 
 const createWindow = (): void => {
@@ -97,7 +99,9 @@ const createTray = () => {
   });
 
   const contextMenu = Menu.buildFromTemplate([{ label: 'Exit', type: 'normal', role: 'quit' }]);
-  tray.setContextMenu(contextMenu);
+  tray.on('right-click', function (event) {
+    tray.popUpContextMenu(contextMenu);
+  });
 };
 
 app.on('ready', () => {
