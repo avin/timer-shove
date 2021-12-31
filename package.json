@@ -2,7 +2,7 @@
   "name": "timer-shove",
   "productName": "timer-shove",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Timer tray app to take breaks",
   "main": ".webpack/main",
   "scripts": {
     "dev": "electron-forge start",
