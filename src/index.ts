@@ -95,11 +95,16 @@ const showWindow = ({ withFocus = true }: { withFocus?: boolean } = {}) => {
 const createTray = () => {
   tray = new Tray(getIcon('time-off.png'));
   tray.on('click', function () {
-    showWindow();
+    console.log(win.isVisible);
+    if (win.isVisible()) {
+      win.webContents.send('blur');
+    } else {
+      showWindow();
+    }
   });
 
   const contextMenu = Menu.buildFromTemplate([{ label: 'Exit', type: 'normal', role: 'quit' }]);
-  tray.on('right-click', function (event) {
+  tray.on('right-click', function () {
     tray.popUpContextMenu(contextMenu);
   });
 };

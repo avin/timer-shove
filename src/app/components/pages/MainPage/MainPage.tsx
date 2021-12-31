@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-// import {ipcRenderer} from 'electron';
 import styles from './MainPage.module.scss';
 import { Button, InputGroup, Intent } from '@blueprintjs/core';
 import { secondsToString, stringToSeconds } from 'timer-string';
@@ -13,6 +12,8 @@ import { AppThunkDispatch } from '../../../store/configureStore';
 let timerId: ReturnType<typeof setTimeout>;
 let updateWindowStateTimerId: ReturnType<typeof setTimeout>;
 let soundTimerId: ReturnType<typeof setTimeout>;
+
+const isMacintosh = navigator.platform.indexOf('Mac') > -1;
 
 const MainPage = (): JSX.Element => {
   const [isActiveTimer, setIsActiveTimer] = useState(false);
@@ -195,7 +196,7 @@ const MainPage = (): JSX.Element => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={cn(styles.container, { [styles.mac]: isMacintosh })}>
       <div className={cn(styles.filler, { [styles.isTimeOver]: isTimeOver })} style={{ width: fillerWidth }} />
 
       <div>

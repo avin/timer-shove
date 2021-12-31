@@ -6,10 +6,14 @@
   background-color: $light-gray3;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 3px rgba($black, .3);
+  box-shadow: 0 0 3px rgba($black, 0.3);
 
   * {
     border-radius: 0 !important;
+  }
+
+  &.mac {
+    box-shadow: none;
   }
 }
 
@@ -29,7 +33,6 @@ $filler-size: 12px;
   }
 
   &.isChilling {
-    background-color: $gold3;
     animation: chilling-filler-animation 0.5s infinite alternate;
   }
 }
@@ -45,10 +48,10 @@ $filler-size: 12px;
 
 @keyframes chilling-filler-animation {
   from {
-    opacity: 0;
+    background-color: $gold3;
   }
   to {
-    opacity: 1;
+    background-color: $white;
   }
 }
 
