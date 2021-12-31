@@ -95,7 +95,6 @@ const showWindow = ({ withFocus = true }: { withFocus?: boolean } = {}) => {
 const createTray = () => {
   tray = new Tray(getIcon('time-off.png'));
   tray.on('click', function () {
-    console.log(win.isVisible);
     if (win.isVisible()) {
       win.webContents.send('blur');
     } else {
