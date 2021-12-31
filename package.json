@@ -28,7 +28,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "timer-shove"
+            "name": "timer_shove"
           }
         },
         {
