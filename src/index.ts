@@ -13,6 +13,7 @@ if (require('electron-squirrel-startup')) {
 let tray: Tray = undefined;
 let win: BrowserWindow = undefined;
 const store = new Store();
+let closeTime = +new Date();
 
 const getWindowPosition = () => {
   const windowBounds = win.getBounds();
@@ -78,6 +79,10 @@ const createWindow = (): void => {
     win.webContents.send('blur');
   });
 
+  win.on('hide', () => {
+    closeTime = +new Date();
+  });
+
   win.on('closed', () => {
     win = null;
   });
@@ -98,7 +103,9 @@ const createTray = () => {
     if (win.isVisible()) {
       win.webContents.send('blur');
     } else {
-      showWindow();
+      if (+new Date() - closeTime > 200) {
+        showWindow();
+      }
     }
   });
 
