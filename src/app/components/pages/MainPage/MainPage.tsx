@@ -78,6 +78,10 @@ const MainPage = (): JSX.Element => {
   }, [isTimeOver, isActiveTimer]);
 
   useEffect(() => {
+    window.ipcRenderer.send('updateTimerString', timerString);
+  }, [timerString]);
+
+  useEffect(() => {
     setTimerString(secondsToString(timerValue));
     if (timerValue > 0 && isActiveTimer) {
       clearTimeout(timerId);
@@ -103,6 +107,12 @@ const MainPage = (): JSX.Element => {
       clearTimeout(updateWindowStateTimerId);
     };
   }, [isActiveTimer, isTimeOver, isChilling]);
+
+  useEffect(() => {
+    if (!isActiveTimer) {
+      setTimerString('');
+    }
+  }, [isActiveTimer]);
 
   const handleClickStart = useCallback(() => {
     const seconds = Math.max(stringToSeconds(timerSetupString), 1);

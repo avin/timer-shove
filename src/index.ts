@@ -163,3 +163,8 @@ ipcMain.on('stopTimer', () => {
 ipcMain.on('startChill', () => {
   tray.setImage(getIcon('time-idle.png'));
 });
+
+ipcMain.on('updateTimerString', (e, val) => {
+  console.log('val', val);
+  tray.setToolTip(val);
+});
