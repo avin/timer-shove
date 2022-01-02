@@ -165,6 +165,5 @@ ipcMain.on('startChill', () => {
 });
 
 ipcMain.on('updateTimerString', (e, val) => {
-  console.log('val', val);
   tray.setToolTip(val);
 });
